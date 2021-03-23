@@ -31,4 +31,5 @@ export interface IHWElrondApp {
         accountIndex: number,
         addressIndex: number,
     }>;
+    signMessage(message: Buffer): Promise<string>;
 }

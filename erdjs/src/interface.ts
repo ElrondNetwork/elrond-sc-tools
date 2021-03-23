@@ -7,6 +7,7 @@ import { Query, QueryResponse } from "./smartcontracts/query";
 import { NetworkStake } from "./networkStake";
 import { Stats } from "./stats";
 import { NetworkStatus } from "./networkStatus";
+import { Message } from "./message/message";
 
 /**
  * An interface that defines the endpoints of an HTTP API Provider.
@@ -80,6 +81,11 @@ export interface ISigner {
      * Signs a message (e.g. a {@link Transaction}).
      */
     sign(signable: ISignable): Promise<void>;
+}
+
+export interface ISignatureVerifier {
+
+    verify(message: Message): Promise<boolean>;
 }
 
 /**

@@ -6,12 +6,13 @@ import AppElrond from "@elrondnetwork/hw-app-elrond";
 import platform from "platform";
 
 import {IDappProvider, IHWElrondApp} from "./interface";
-import {IProvider} from "../interface";
+import {IProvider, ISignable} from "../interface";
 import {Transaction} from "../transaction";
 import {Address} from "../address";
 import {Signature} from "../signature";
 import {compareVersions} from "../versioning";
 import {LEDGER_TX_HASH_SIGN_MIN_VERSION} from "./constants";
+import { Message } from "../message";
 
 export class HWProvider implements IDappProvider {
     provider: IProvider;
@@ -99,6 +100,21 @@ export class HWProvider implements IDappProvider {
         await transaction.send(this.provider);
 
         return transaction;
+    }
+
+    async signMessage(message: Message): Promise<Message> {
+        if (!this.hwApp) {
+            throw new Error("HWApp not initialised, call init() first");
+        }
+
+        const address = await this.getCurrentAddress();
+        let signer = new Address(address);
+        // Ledger applies prefix and computes hash
+        let unsigned = message.value;
+        let signature = new Signature(await this.hwApp.signMessage(unsigned));
+        message.applySignature(signature, signer);
+
+        return message;
     }
 
     private async shouldSignUsingHash(): Promise<boolean> {

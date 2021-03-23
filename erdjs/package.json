@@ -29,7 +29,7 @@
   "dependencies": {
     "@babel/runtime": "^7.11.2",
     "@elrondnetwork/bls-wasm": "^0.3.3",
-    "@elrondnetwork/hw-app-elrond": "0.2.0",
+    "@elrondnetwork/hw-app-elrond": "0.3.0",
     "@ledgerhq/hw-transport-u2f": "^5.28.0",
     "@ledgerhq/hw-transport-webusb": "^5.28.0",
     "abort-controller": "^3.0.0",

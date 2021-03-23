@@ -155,6 +155,15 @@ export class ErrSignerCannotSign extends Err {
 }
 
 /**
+ * Signals an error related to verifying a message.
+ */
+export class ErrSignerCannotVerify extends Err {
+  public constructor(inner: Error) {
+    super(`Cannot verify`, inner);
+  }
+}
+
+/**
  * Signals an invalid value for {@link Balance} objects.
  */
 export class ErrBalanceInvalid extends Err {
@@ -450,5 +459,14 @@ export class ErrWrongMnemonic extends ErrWallet {
 export class ErrBadPEM extends ErrWallet {
   public constructor(message?: string) {
     super(message ? `Bad PEM: ${message}` : `Bad PEM`);
+  }
+}
+
+/**
+ * Signals an invalid value for {@link MessageVersion} objects.
+ */
+export class ErrMessageVersionInvalid extends Err {
+  public constructor(value: number) {
+    super(`Invalid message version: ${value}`);
   }
 }

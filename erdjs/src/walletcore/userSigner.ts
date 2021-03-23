@@ -20,7 +20,7 @@ export class UserSigner implements ISigner {
         return new UserSigner(secretKey);
     }
 
-    static fromPem(text: string, index: number = 0) {
+    static fromPem(text: string, index: number = 0): ISigner {
         let secretKey = UserSecretKey.fromPem(text, index);
         return new UserSigner(secretKey);
     }
