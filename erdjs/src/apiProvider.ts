@@ -1,4 +1,4 @@
-import axios from "axios";
+import Axios, { AxiosTransformer } from "axios";
 import { IApiProvider } from "./interface";
 import * as errors from "./errors";
 import { Logger } from "./logger";
@@ -85,8 +85,19 @@ export class ApiProvider implements IApiProvider {
 }
 
 // See: https://github.com/axios/axios/issues/983
-axios.defaults.transformResponse = [
-  function(data) {
-    return JSONbig.parse(data);
-  },
-];
+const bigIntTransformer: AxiosTransformer = (data: any) => {
+  if (typeof data === 'string') {
+    try {
+      data = JSONbig.parse(data);
+    } catch (e) { /* Ignore */ }
+  }
+  return data;
+}
+
+const axios = Axios.create({
+  // First try to parse data with bigInt parse, then run execute default parsers
+  transformResponse: ([] as any).concat(
+    bigIntTransformer,
+    Axios.defaults.transformResponse,
+  )
+});
