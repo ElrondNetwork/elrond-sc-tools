@@ -58,7 +58,7 @@ $(async function () {
     $("#BroadcastButton").click(async function () {
         try {
             let transactionHash = await transaction.send(provider);
-            displayObject("BroadcastedTransactionContainer", transactionHash);
+            displayUint8Array( 'BroadcastedTransactionContainer', transactionHash.hash,);
         } catch (error) {
             onError(error);
         }
@@ -67,7 +67,7 @@ $(async function () {
     $("#QueryButton").click(async function () {
         try {
             await transaction.getAsOnNetwork(provider);
-            displayObject("QueriedTransactionContainer", transaction.getAsOnNetworkCached());
+            displayObject("QueriedTransactionContainer", transaction.toPlainObject());
         } catch (error) {
             onError(error);
         }
@@ -108,4 +108,25 @@ function displayObject(container: string, obj: any) {
     // Note that stringify will throw an error when the "5. Query transaction" button is clicked, probably because in this case "obj" contains BigNumber, which cannot be stringified. The error message defaults to "Address is empty".
     let json = JSON.stringify(obj, null, 4);
     $(`#${container}`).html(json);
+}
+
+const LUT_HEX_4b = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+const LUT_HEX_8b = new Array(0x100);
+for (let n = 0; n < 0x100; n++) {
+  LUT_HEX_8b[n] = `${LUT_HEX_4b[(n >>> 4) & 0xf]}${LUT_HEX_4b[n & 0xf]}`;
+}
+// End Pre-Init
+function toHex(buffer: Uint8Array) {
+  let out = '';
+  for (let idx = 0, edx = buffer.length; idx < edx; idx++) {
+    out += LUT_HEX_8b[buffer[idx]];
+  }
+  return out;
+}
+
+function displayUint8Array(container: string, u8a: any) {
+  // Note that stringify will throw an error when the "5. Query transaction" button is clicked, probably because in this case "obj" contains BigNumber, which cannot be stringified. The error message defaults to "Address is empty".
+  console.log('displayObject', 'container: ', container, 'u8a: ', u8a);
+  let s = toHex(u8a);
+  $(`#${container}`).html(s);
 }
